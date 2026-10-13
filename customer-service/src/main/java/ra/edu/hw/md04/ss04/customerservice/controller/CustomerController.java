@@ -1,0 +1,47 @@
+package ra.edu.hw.md04.ss04.customerservice.controller;
+
+import jakarta.validation.Valid;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ra.edu.hw.md04.ss04.customerservice.dto.CustomerRequestDTO;
+import ra.edu.hw.md04.ss04.customerservice.dto.CustomerResponseDTO;
+import ra.edu.hw.md04.ss04.customerservice.dto.LoginRequestDTO;
+import ra.edu.hw.md04.ss04.customerservice.service.CustomerService;
+
+@RestController
+@RequestMapping("/api/v1/customers")
+public class CustomerController {
+
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<CustomerResponseDTO> register(@Valid @RequestBody CustomerRequestDTO request) {
+        return new ResponseEntity<>(customerService.register(request), HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CustomerResponseDTO>> findAll() {
+        return ResponseEntity.ok(customerService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponseDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.findById(id));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<CustomerResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(customerService.login(request));
+    }
+}
